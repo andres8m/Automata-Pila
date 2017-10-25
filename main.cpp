@@ -8,16 +8,8 @@
 #include <conio.h>
 #include <vector>
 
-
 using namespace std;
 
-
-
-//struct nodo {
-//    string simbolo;
-//    struct nodo *siguiente;
-//    struct nodo *anterior;
-//};
 
 struct movimiento {
     string simbolo1;
@@ -32,9 +24,16 @@ struct transicion {
     movimiento move;
 };
 
-string list[60]={};
 vector <string> pila;
 vector <transicion> trsns;
+vector <string> abcd;
+
+void defineABCD()
+{
+    abcd.push_back("a");
+    abcd.push_back("b");
+    abcd.push_back("c");
+}
 
 void defineVars()
 {
@@ -156,8 +155,11 @@ movimiento buscarTransicion(string simbolo, string tope)
 
 void insertarEnPila(movimiento mov1)
 {
-    pila.push_back(mov1.simbolo2);
-    pila.push_back(mov1.simbolo1);
+    if(mov1.simbolo2!="$")
+    {pila.push_back(mov1.simbolo2);}
+    if(mov1.simbolo1!="$")
+    {pila.push_back(mov1.simbolo1);}
+
 }
 
 string quitarTope()
@@ -179,7 +181,7 @@ int main()
     string cadena;
     cout << "Bienvenido, ingrese cadena a validar " <<endl;
     getline (cin,cadena);
-    cout << "Estado inicial de pila: "<< pila.at(0)<<"\n";
+    cout << "Estado inicial de pila: " << pila.at(0)<<"\n";
 
 
     for(int i=0; i<cadena.length(); ++i)
