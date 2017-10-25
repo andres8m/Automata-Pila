@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -7,9 +8,18 @@
 #include <ctype.h>
 #include <conio.h>
 #include <vector>
+#include <sstream>
 
 using namespace std;
 
+struct definicion{
+    vector <string> estados;
+    string estadoInicial;
+    vector<string> alfabeto;
+    string alfabetoCinta;
+    string estadoAceptacion;
+    string Z0;
+};
 
 struct movimiento {
     string simbolo1;
@@ -27,6 +37,7 @@ struct transicion {
 vector <string> pila;
 vector <transicion> trsns;
 vector <string> abcd;
+definicion automataDef;
 
 void defineABCD()
 {
@@ -170,16 +181,175 @@ string quitarTope()
 }
 
 
+vector<string> castStringsByComma(string cadena)
+{
+
+    istringstream iss(cadena);
+    string ss;
+
+    vector<string> tokens;
+    while (getline(iss, ss, ','))
+    {
+        tokens.push_back(ss);
+    }
+
+//    for(int i=0; i<tokens.size();i++)
+//    {
+//        cout << tokens[i]<<"\n";
+//    }
+    return tokens;
+}
 
 
+string cleanString(string cadena)
+{
+    int index;
+    int lastIndex;
+    string response;
+    bool f1 =false;
+    bool f2 = false;
+
+    for(int i=0; i<cadena.size();i++)
+    {
+        if(cadena[i] == '{')
+        {
+            index = i;f1 = true;
+
+        } else if(cadena[i] == '}')
+        {lastIndex=i;f2=true;}
+    }
+
+    if(index<=0)
+    {
+        index = 0;
+    }
+    else
+    {
+        index=index+1;
+
+    }
+
+    if(!f1 || !f2)
+    {
+        response = "ERROR";
+    }
+
+    response.append(cadena.begin()+index, cadena.begin()+lastIndex);
+    return response;
+}
+
+bool checkS(string cadena)
+{
+    bool response = false;
+    if(cadena[0]=='S' || cadena[0]=='s')
+    {
+        return true;
+    }
+    return response;
+}
+
+bool checkS0(string cadena)
+{
+    bool response = false;
+    if((cadena[0]=='S' || cadena[0]=='s') && cadena[1]=='0')
+    {
+        return true;
+    }
+    return response;
+}
+
+bool checkA(string cadena)
+{
+    bool response = false;
+    if(cadena[0]=='A' || cadena[0]=='a')
+    {
+        return true;
+    }
+    return response;
+}
+
+bool checkAC(string cadena)
+{
+    bool response = false;
+    if((cadena[0]=='A' || cadena[0]=='a') && (cadena[1]=='C' || cadena[1]=='c'))
+    {
+        return true;
+    }
+    return response;
+}
+
+bool checkT(string cadena)
+{
+    bool response = false;
+    if(cadena[0]=='T' || cadena[0]=='t')
+    {
+        return true;
+    }
+    return response;
+}
+
+bool checkZ0(string cadena)
+{
+    bool response = false;
+    if((cadena[0]=='Z' || cadena[0]=='z') && cadena[1]=='0')
+    {
+        return true;
+    }
+    return response;
+}
+
+bool readFile()
+{
+    bool response;
+    string x;
+    ifstream file("automata.txt");
+    vector <string> info;
+
+    while(getline(file,x))
+    {
+        if( x[0]!='/' && x[1] != '+' )
+        {
+            info.push_back(x);
+        }
+    }
+
+    if( checkS(info[0]) && checkS0(info[1]) && checkA(info[2]) && checkAC(info[3]) && checkT(info[4]) && checkZ0(info[5]))
+    {
+        response = true;
+    }
+    else
+    {
+        response = false;
+    }
+
+    return response;
+
+//    for(int i=0; i<info.size();i++)
+//    {
+//        cout<< info[i] << "\n";
+//    }
+}
 
 
 int main()
 {
     defineVars();
+    readFile();
+
+    string val = "S = {q0,q1,q2}";
+    string clnStr = cleanString(val);
+    vector <string> myStrs = castStringsByComma(clnStr);
+
+//    for(int i=0; i<myStrs.size();i++)
+//    {
+//        cout<<myStrs[i]<<"\n";
+//    }
 
     string cadena;
     cout << "Bienvenido, ingrese cadena a validar " <<endl;
+
+
+
     getline (cin,cadena);
     cout << "Estado inicial de pila: " << pila.at(0)<<"\n";
 
