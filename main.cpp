@@ -377,11 +377,11 @@ bool checkZ0(string cadena)
     return response;
 }
 
-bool readFile()
+bool readFile(string ruta)
 {
     bool response;
     string x;
-    ifstream file("automata.txt");
+    ifstream file(ruta.c_str());
 
 
     while(getline(file,x))
@@ -469,19 +469,6 @@ void readTransitions()
 
 
 
-//    cout<<"Movimientos"<<"\n";
-//        for(int i=0; i<myStrs.size();i++)
-//    {
-//        cout<< myStrs[i] << "\n";
-//    }
-//
-//    cout<<"Transiciones"<<"\n";
-//    for(int i=0; i<myStrs2.size();i++)
-//    {
-//        cout<< myStrs2[i] << "\n";
-//    }
-
-
 
 
 }
@@ -489,23 +476,36 @@ void readTransitions()
 
 int main()
 {
+//    char c;
+//    string pass;
+//    cout<<"\n Password: ";
+//    while(c!=13)
+//    {
+//        c=getch();
+//        if(c!=13)
+//        {
+//            pass+=c;
+//            cout<<"*";
+//        }
+//    }
+    string ruta;
+    cout << "Bienvenido, ingrese ruta del archivo: " <<endl;
+    getline (cin,ruta);
 
-    if(!readFile())
+    if(!readFile(ruta))
     {
         cout<<"Error en el archivo.";
         return 0;
     }
-//    readFile();
+
     readTransitions();
     pila.push_back(automataDef.Z0);
 
 
     string cadena;
     cout << "Bienvenido, ingrese cadena a validar: " <<endl;
-
-
-
     getline (cin,cadena);
+
     cout << "Estado inicial de pila: " << pila.at(0)<<"\n"<<"\n"<<"\n";
 
     activeState = automataDef.estadoInicial;
@@ -523,7 +523,7 @@ int main()
         } else{
             insertarEnPila(move);
 
-            cout << "Iteracion #" <<i+1<< " |Ingresandor: " <<str<<", "<<tope <<"\n";
+            cout << "Iteracion #" <<i+1<< " |Ingresando: " <<str<<", "<<tope <<"\n";
             for(int j=0; j<pila.size();j++)
             {
                 cout << pila[j]<<"\n";
